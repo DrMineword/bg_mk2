@@ -1,0 +1,18 @@
+{
+  "background_color": "#222222",
+  "text_color": "#ffffff",
+  "sections": [
+    {
+      "id": "title",
+      "html": "<h1>Welcome to the Future</h1>"
+    },
+    {
+      "id": "description",
+      "html": "<p>This is a dynamically loaded home page. It updates when needed.</p>"
+    },
+    {
+      "id": "box1",
+      "html": "<div class='box'>This is a content box with dynamically loaded data.</div>"
+    }
+  ]
+}
