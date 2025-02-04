@@ -1,6 +1,6 @@
 {
-"type": "beta",
-  "version": "0.0.",
-  "model-version: "0",
-  "console_sha": "test"
+  "type": "alpha",
+  "version": "\"-0.1\"",
+  "model_version": "1",
+  "console_sha": "test123"
 }
