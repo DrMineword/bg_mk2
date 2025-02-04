@@ -4,11 +4,11 @@
   "sections": [
     {
       "id": "title",
-      "html": "<h1>Welcome to the Future</h1>"
+      "html": "<h1>Welcome to Botghost User Market</h1>"
     },
     {
       "id": "description",
-      "html": "<p>This is a dynamically loaded home page. It updates when needed.</p>"
+      "html": "<div style=\"color: white; text-align: center; font-size: 14px; background-color: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px; max-width: 600px; margin: 20px auto;\">\n    <p>This page is not an official BotGhost product. We are not affiliated with their company. We are voluntarily creating an alternative non-competitive version free of any fees of <a href=\"https://botghost.com/market/\" target=\"_blank\" style=\"color: white;\">https://botghost.com/market/</a>.</p>\n    <p>BotGhost. All rights reserved.<br>ABN: 33 673 683 059</p>\n</div>\n"
     },
     {
       "id": "box1",
