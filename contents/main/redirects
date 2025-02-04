@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1",
+    "title": "OpenAI",
+    "url": "https://openai.com",
+    "description": "<p>Explore the future of AI</p>",
+    "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA"
+  },
+  {
+    "id": "2",
+    "title": "GitHub",
+    "url": "https://github.com",
+    "description": "<p>Code, collaborate, and contribute.</p>",
+    "image": null
+  }
+]
