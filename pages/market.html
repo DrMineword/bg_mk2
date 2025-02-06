@@ -1,1 +1,141 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Page</title>
+</head>
+<body style="background-color: black; color: white; text-align: center;">
+
+    <script>
+        async function fetchJSON(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`404 Not Found: ${url}`);
+                return await response.json();
+            } catch (error) {
+                console.error("Fetch error:", error);
+                return null;
+            }
+        }
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function encodeBase64(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        function decodeBase64(str) {
+            try {
+                return decodeURIComponent(escape(atob(str)));
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function loadMarketPage(uid, mid) {
+            const userAPI = `https://api.lanyard.rest/v1/users/${uid}`;
+            const rankAPI = `https://drmineword.github.io/bg_mk2/contents/user_contents/${uid}/rank.json`;
+            const marketDataAPI = `https://drmineword.github.io/bg_mk2/contents/user_contents/${uid}/${mid}/data.json`;
+            const supportAPI = `https://drmineword.github.io/bg_mk2/contents/user_contents/${uid}/support.txt`;
+            const ratingUpAPI = `https://drmineword.github.io/bg_mk2/contents/user_contents/${uid}/${mid}/rating_up?nocache=${Date.now()}`;
+            const ratingDownAPI = `https://drmineword.github.io/bg_mk2/contents/user_contents/${uid}/${mid}/rating_down?nocache=${Date.now()}`;
+
+            const [userData, rankData, marketData] = await Promise.all([
+                fetchJSON(userAPI),
+                fetchJSON(rankAPI),
+                fetchJSON(marketDataAPI)
+            ]);
+
+            if (!marketData) {
+                document.body.innerHTML = "<h1>404 Not Found</h1>";
+                return;
+            }
+
+            let userAvatar = userData?.data?.discord_user?.avatar;
+            let userDisplayName = userData?.data?.discord_user?.display_name || "Unknown User";
+            let userStatus = userData?.data?.discord_status || "offline";
+            let userRank = rankData?.name || "No Rank";
+            let rankColor = rankData?.hex || "#808080";
+            let userIcon = userAvatar ? `https://cdn.discordapp.com/avatars/${uid}/${userAvatar}.png` : "https://cdn.discordapp.com/embed/avatars/0.png"; // Default icon
+
+            let supportServer = await fetch(supportAPI).then(res => res.ok ? res.text() : null);
+            if (!supportServer) {
+                const inviteCode = uid; // Assuming UID is also the invite code
+                const inviteAPI = `https://discord.com/api/v9/invites/${inviteCode}`;
+                const inviteData = await fetchJSON(inviteAPI);
+                if (inviteData) {
+                    supportServer = `<a href="https://discord.gg/${inviteCode}" style="color: white;">
+                                        <img src="https://cdn.discordapp.com/icons/${inviteData.guild.id}/${inviteData.guild.icon}.png" width="24">
+                                        Join ${inviteData.guild.name}
+                                     </a>`;
+                }
+            }
+
+            document.body.innerHTML = `
+                <img src="${userIcon}" width="64" height="64"><br>
+                <b>@${userDisplayName}</b><br>
+                <span style="color: ${rankColor};">${userRank}</span><br>
+                <span style="color: ${userStatus === "online" ? "green" : userStatus === "idle" ? "yellow" : "gray"};">
+                    ${userStatus.toUpperCase()}
+                </span><br><br>
+
+                <h2># ${marketData.title}</h2>
+
+                <p><b>Share Code:</b></p>
+                <input type="text" value="${marketData.sharecode}" readonly onclick="this.select();" style="width: 80%;">
+
+                <div>${marketData.html_large_descryption}</div>
+
+                ${supportServer ? `<p>Support Server:</p> ${supportServer}` : ''}
+
+                <br>
+                <p>Ratings:</p>
+                <button onclick="sendVote('${ratingUpAPI}')">👍</button> <button onclick="sendVote('${ratingDownAPI}')">👎</button>
+
+                <br><br>
+                Want to upvote or dislike? Send this ID "<b>${encodeBase64(uid + '/' + mid)}</b>" to our bot.
+            `;
+        }
+
+        async function sendVote(api) {
+            try {
+                const response = await fetch(api, { method: "POST" });
+                if (!response.ok) throw new Error("Failed to send vote");
+                alert("Vote submitted!");
+            } catch (error) {
+                console.error("Vote error:", error);
+                alert("Error sending vote.");
+            }
+        }
+
+        (async function main() {
+            let uid = getQueryParam("uid");
+            let mid = getQueryParam("mid");
+            let sid = getQueryParam("sid");
+
+            if (sid) {
+                const decoded = decodeBase64(sid);
+                if (decoded && decoded.includes("/")) {
+                    [uid, mid] = decoded.split("/");
+                } else {
+                    document.body.innerHTML = "<h1>404 Not Found</h1>";
+                    return;
+                }
+            }
+
+            if (!uid || !mid) {
+                document.body.innerHTML = "<h1>404 Not Found</h1>";
+                return;
+            }
+
+            await loadMarketPage(uid, mid);
+        })();
+    </script>
+
+</body>
+</html>
