@@ -1,0 +1,15 @@
+{
+  "user": {
+    "user_id": "1234567890"
+  },
+  "market": {
+    "page_id": "market_001",
+    "timestamp": {
+      "add": "2025-02-06T12:00:00Z",
+      "edit": "2025-02-07T14:30:00Z"
+    },
+    "sharecode": "ABCD-1234-EFGH",
+    "html_large_description": "<p>This is an example market page where users can list their items.</p><p><strong>Features:</strong></p><ul><li>Easy to use</li><li>Secure sharing</li></ul>",
+    "title": "Example Market Listing"
+  }
+}
