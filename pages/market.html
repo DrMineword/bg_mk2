@@ -116,6 +116,11 @@
         .status.offline {
             color: gray;
         }
+
+        .small-text {
+            font-size: 12px;
+            color: #808080;
+        }
     </style>
 </head>
 <body>
@@ -163,7 +168,7 @@
                 let userStatus = userData?.data?.discord_status || "offline";
                 let userRank = rankData?.name || "No Rank";
                 let rankColor = rankData?.hex || "#808080";
-                let userIcon = userAvatar ? `https://cdn.discordapp.com/avatars/${uid}/${userAvatar}.png` : "https://cdn.discordapp.com/embed/avatars/0.png"; // Default icon
+                let userIcon = userAvatar ? `https://cdn.discordapp.com/avatars/${uid}/${userAvatar}` : "https://cdn.discordapp.com/embed/avatars/0.png"; // Default icon
 
                 let supportServer = await fetch(supportAPI).then(res => res.ok ? res.text() : null);
                 if (!supportServer) {
@@ -180,7 +185,7 @@
 
                 const marketTitle = marketData?.title || "Market Title";
                 const marketShareCode = marketData?.sharecode || "No Share Code Available";
-                const marketDescription = marketData?.html_large_descryption || "No Description Available";
+                const marketDescription = marketData?.html_large_description || "No Description Available";
 
                 document.body.innerHTML = `
                     <div class="user-info">
@@ -206,7 +211,7 @@
                     <div class="status ${userStatus}">${userStatus.toUpperCase()}</div>
 
                     <br><br>
-                    Want to upvote or dislike? Send this ID "<b>${encodeBase64(uid + '/' + mid)}</b>" to our bot.
+                    <p class="small-text">Want to upvote or dislike? Send this ID "<b>${encodeBase64(uid + '/' + mid)}</b>" to our bot.</p>
                 `;
             }
 
